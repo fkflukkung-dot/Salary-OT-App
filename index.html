@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f2f2f7">
+<title>เงินเดือน + OT</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+*{box-sizing:border-box}html,body{margin:0;background:#f2f2f7;color:#111;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",sans-serif}
+body{min-height:100vh}.app{max-width:430px;margin:auto;padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 28px)}
+header{padding:8px 4px 18px}.cap{font-size:13px;color:#8e8e93;font-weight:700;letter-spacing:.4px}.title{font-size:34px;font-weight:800;letter-spacing:-1.3px;margin-top:4px}
+.card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 1px 3px #0000000c;margin-bottom:14px}.block{padding:18px}.block+.block{border-top:1px solid #e5e5ea}
+label{display:block;color:#6e6e73;font-size:15px;font-weight:600;margin-bottom:7px}
+input{display:block;width:100%;height:50px;border:1.5px solid #d1d1d6;border-radius:13px;background:#fafafa;padding:0 14px;font-size:20px;color:#111;outline:0;-webkit-appearance:none}
+input:focus{border-color:#007aff;background:#fff;box-shadow:0 0 0 3px #007aff18}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}.rate{margin-top:14px;padding:13px;border-radius:13px;background:#f2f2f7;display:flex;justify-content:space-between;color:#636366}.rate b{color:#111}
+.otlabel{margin-bottom:9px}.otrow{display:grid;grid-template-columns:72px 1fr;gap:11px;margin:11px 0}.mult{display:flex;align-items:center;justify-content:center;border-radius:12px;background:#e7f0ff;color:#007aff;font-size:17px;font-weight:800}
+.otbox{position:relative}.otbox input{padding-right:55px}.unit{position:absolute;right:14px;top:15px;color:#8e8e93;font-size:14px;pointer-events:none}
+button{display:block;width:100%;height:54px;border:0;border-radius:15px;font-size:18px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.primary{background:#007aff;color:#fff;margin-top:15px}.primary:active{background:#006fe6}.secondary{background:#e5e5ea;color:#111;margin-top:10px}
+.summary{background:#111827;color:#fff;border-radius:21px;padding:21px;margin-bottom:12px}.sumhead{font-size:16px;color:#cfd3da;font-weight:650;margin-bottom:10px}.line{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:17px;color:#d7dbe1}.line b{color:#fff;font-size:17px}.total{border-top:1px solid #394150;margin-top:10px;padding-top:16px}.total span{display:block;color:#cfd3da;font-size:15px}.total strong{display:block;font-size:32px;line-height:1.15;margin-top:4px;letter-spacing:-.6px}
+.note{font-size:12px;line-height:1.55;color:#8e8e93;padding:2px 4px}.toast{position:fixed;left:50%;bottom:25px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<main class="app">
+<header><div class="cap">CALCULATOR</div><div class="title">เงินเดือน + OT</div></header>
+
+<section class="card">
+<div class="block">
+<label for="salary">เงินเดือน (บาท)</label>
+<input id="salary" type="number" inputmode="decimal" value="45770">
+<div class="grid">
+<div><label for="days">วันทำงาน / เดือน</label><input id="days" type="number" inputmode="numeric" value="30"></div>
+<div><label for="hours">ชั่วโมง / วัน</label><input id="hours" type="number" inputmode="decimal" value="8"></div>
+</div>
+<div class="rate"><span>ค่าแรงต่อชั่วโมง</span><b id="rate">฿190.71</b></div>
+</div>
+
+<div class="block">
+<label class="otlabel">ชั่วโมง OT</label>
+<div class="otrow"><div class="mult">× 1.0</div><div class="otbox"><input id="ot1" type="number" inputmode="decimal" placeholder="0"><span class="unit">ชม.</span></div></div>
+<div class="otrow"><div class="mult">× 1.5</div><div class="otbox"><input id="ot15" type="number" inputmode="decimal" placeholder="0"><span class="unit">ชม.</span></div></div>
+<div class="otrow"><div class="mult">× 3.0</div><div class="otbox"><input id="ot3" type="number" inputmode="decimal" placeholder="0"><span class="unit">ชม.</span></div></div>
+<button id="calculate" class="primary" type="button">คำนวณเงินเดือน + OT</button>
+<button id="reset" class="secondary" type="button">รีเซ็ต</button>
+</div>
+</section>
+
+<section class="summary">
+<div class="sumhead">สรุปผลการคำนวณ</div>
+<div class="line"><span>เงินเดือน</span><b id="sumSalary">฿45,770.00</b></div>
+<div class="line"><span>OT × 1.0</span><b id="sum1">฿0.00</b></div>
+<div class="line"><span>OT × 1.5</span><b id="sum15">฿0.00</b></div>
+<div class="line"><span>OT × 3.0</span><b id="sum3">฿0.00</b></div>
+<div class="line"><span>OT รวม</span><b id="sumOT">฿0.00</b></div>
+<div class="total"><span>เงินเดือนรวม OT</span><strong id="grand">฿45,770.00</strong></div>
+</section>
+<div class="note">สูตรค่าแรง/ชั่วโมง = เงินเดือน ÷ วันทำงาน/เดือน ÷ ชั่วโมงทำงาน/วัน<br>เป็นเครื่องมือคำนวณเบื้องต้น การจ่ายจริงให้ยึดหลักเกณฑ์ของบริษัทและกฎหมายที่เกี่ยวข้อง</div>
+</main>
+<div id="toast" class="toast">คำนวณเรียบร้อย ✓</div>
+
+<script>
+(function(){
+"use strict";
+function el(id){return document.getElementById(id)}
+function val(id){var x=parseFloat(el(id).value);return isFinite(x)?x:0}
+function money(x){return "฿"+(Math.round((x+Number.EPSILON)*100)/100).toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function calculate(){
+ var salary=val("salary"),days=val("days"),hours=val("hours");
+ var rate=(days>0&&hours>0)?salary/(days*hours):0;
+ var ot1=rate*val("ot1"),ot15=rate*val("ot15")*1.5,ot3=rate*val("ot3")*3;
+ var total=ot1+ot15+ot3;
+ el("rate").textContent=money(rate);
+ el("sumSalary").textContent=money(salary);
+ el("sum1").textContent=money(ot1);
+ el("sum15").textContent=money(ot15);
+ el("sum3").textContent=money(ot3);
+ el("sumOT").textContent=money(total);
+ el("grand").textContent=money(salary+total);
+ var t=el("toast");t.classList.add("show");setTimeout(function(){t.classList.remove("show")},1200);
+}
+el("calculate").addEventListener("click",calculate);
+el("reset").addEventListener("click",function(){
+ el("salary").value=45770;el("days").value=30;el("hours").value=8;
+ el("ot1").value="";el("ot15").value="";el("ot3").value="";calculate();
+});
+["salary","days","hours","ot1","ot15","ot3"].forEach(function(id){
+ el(id).addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();calculate();this.blur()}})
+});
+calculate();
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+}
+</script>
+</body>
+</html>
